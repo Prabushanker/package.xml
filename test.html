@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bootstrap-select test page</title>
+
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dist/css/bootstrap-select.css">
+
+  <style>
+    body {
+      padding-top: 70px;
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="dist/js/bootstrap-select.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Salesforce Package.xml Generater</a>
+    </div>	
+  </div>
+</nav>
+
+<center>
+<form>
+ <div class="form-group">
+
+
+		<table>
+		<tr>
+			
+			<select id="metadattype"class="form-control selectpicker" data-hide-disabled="true" data-live-search="true">
+				<optgroup disabled="disabled" label="disabled">
+					<option>Hidden</option>
+				</optgroup>
+				<optgroup label="Empty">
+					<option>Select your Metadata type</option>
+				</optgroup>
+				<optgroup label="ApexClass">
+					<option value=" <types><name>ApexClass</name>
+			</types>">ApexClass</option>
+					<option>Orange</option>
+				</optgroup>
+				<optgroup label="Vegetable">
+					<option>Corn</option>
+					<option>Carrot</option>
+				</optgroup>
+			</select>
+		
+		</tr>
+
+
+		<tr>
+		<td></br></td><td></td>
+		</tr>
+		<tr>	
+			<td><input type="text" class="form-control" id="apiname" placeholder="Enter api Name" name="API Name"/></td>
+			<td></td>
+			<td><button onclick="saveTextAsFile()" class="form-control btn-success"> + Add Next</button></td>
+		</tr>
+		<tr>
+		<td></br></td><td></td>
+		</tr>
+		
+	
+			<tr><td><label for="output">XML code for your input</label></td></tr>
+		<tr>
+			<td colspan="3">
+				<textarea class="form-control" rows="15" id="xmloutput"><?xml version="1.0" encoding="UTF-8"?><Package xmlns="http://soap.sforce.com/2006/04/metadata"></Package>
+				</textarea>
+			</td>
+		</tr>
+		<tr>
+		<td></br></td><td></td>
+		</tr>
+		<tr>
+			<td>Filename to Save As:</td>
+			<td><input id="inputFileNameToSaveAs" class="form-control" value="package"></input></td>
+		</tr>
+		<td></br></td><td></td>
+		<tr>
+			<td>Version of XML </td>
+			<td><input id="versionofxml" class="form-control" value="28.0"></input></td>
+		</tr>
+		<tr>
+		<td></br></td><td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button onclick="saveTextAsFile()" class="form-control btn-primary">Download XML</button></td>
+		</tr>
+		</table>
+
+	</div>
+</form>
+  
+</center>
+
+
+<script>
+var outterstarttext = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Package xmlns=\"http://soap.sforce.com/2006/04/metadata\">";
+var outerendtext ="</Package>"
+var versionofxml = " <version>"+document.getElementById('versionofxml').value+"</version>";
+ $('#metadattype').change(function() {
+ var output1 =	$('#metadattype').val();
+
+ document.getElementById('xmloutput').value = outterstarttext + output1 + versionofxml +outerendtext;
+});
+
+function saveTextAsFile()
+{
+    var textToSave = document.getElementById("xmloutput").value;
+    var textToSaveAsBlob = new Blob([textToSave], {type:"text/xml"});
+    var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+    var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
+ 
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = textToSaveAsURL;
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+ 
+    downloadLink.click();
+}
+ 
+function destroyClickedElement(event)
+{
+    document.body.removeChild(event.target);
+}
+ 
+function loadFileAsText()
+{
+    var fileToLoad = document.getElementById("fileToLoad").files[0];
+ 
+    var fileReader = new FileReader();
+    fileReader.onload = function(fileLoadedEvent) 
+    {
+        var textFromFileLoaded = fileLoadedEvent.target.result;
+        document.getElementById("inputTextToSave").value = textFromFileLoaded;
+    };
+    fileReader.readAsText(fileToLoad, "UTF-8");
+}
+
+</script>
+</body>
+</html>
